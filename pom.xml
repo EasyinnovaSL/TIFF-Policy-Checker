@@ -44,7 +44,8 @@
 
     <scm>
         <connection>scm:git:git@github.com:easyinnova/TIFF-Policy-Checker.git</connection>
-        <developerConnection>scm:git:git@github.com:easyinnova/TIFF-Policy-Checker.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:easyinnova/TIFF-Policy-Checker.git
+        </developerConnection>
         <url>git@github.com:easyinnova/TIFF-Policy-Checker.git</url>
     </scm>
 
@@ -65,18 +66,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.3</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
 
@@ -125,20 +114,73 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.easyinnova.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>sign</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+
+
+    <profiles>
+        <profile>
+            <id>perform deploy</id>
+            <activation>
+                <property>
+                    <name>!local</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.3</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
