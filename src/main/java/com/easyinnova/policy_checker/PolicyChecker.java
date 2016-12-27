@@ -27,11 +27,22 @@ import com.easyinnova.implementation_checker.rules.model.AssertType;
 import com.easyinnova.implementation_checker.rules.model.ImplementationCheckerObjectType;
 import com.easyinnova.implementation_checker.rules.model.RuleType;
 import com.easyinnova.implementation_checker.rules.model.RulesType;
+import com.easyinnova.policy_checker.model.Field;
 import com.easyinnova.policy_checker.model.Rule;
 import com.easyinnova.policy_checker.model.Rules;
+import com.easyinnova.tiff.model.types.IccProfile;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by easy on 11/03/2016.
@@ -87,13 +98,13 @@ public class PolicyChecker {
         for (String value : rule.getValue().split(";")) {
           String value2 = value;
           if (tag.equals("Compression"))
-            value2 = PolicyChecker.compressionCode(value) + "";
+            value2 = PolicyConstants.compressionCode(value) + "";
           if (tag.equals("Photometric")) {
-            value2 = PolicyChecker.photometricCode(value) + "";
+            value2 = PolicyConstants.photometricCode(value) + "";
             if (value2.equals("1")) values.add("0");
           }
           if (tag.equals("Planar")) {
-            value2 = PolicyChecker.planarCode(value) + "";
+            value2 = PolicyConstants.planarCode(value) + "";
           }
           values.add(value2);
         }
@@ -134,62 +145,161 @@ public class PolicyChecker {
     }
   }
 
-  public static int compressionCode(String name) {
-    switch (name) {
-      case "None":
-        return 1;
-      case "CCITT":
-        return 2;
-      case "CCITT GR3":
-        return 3;
-      case "CCITT GR4":
-        return 4;
-      case "LZW":
-        return 5;
-      case "OJPEG":
-        return 6;
-      case "JPEG":
-        return 7;
-      case "DEFLATE Adobe":
-        return 8;
-      case "JBIG BW":
-        return 9;
-      case "JBIG C":
-        return 10;
-      case "PackBits":
-        return 32773;
+  public static List<Field> getPolicyCheckerFields() {
+    try {
+      DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+      Document doc = docBuilder.newDocument();
+      Element policyElement = PolicyChecker.getPolicyCheckerOptions(doc);
+      ArrayList<Field> fields = new ArrayList<Field>();
+      NodeList nodelist = policyElement.getElementsByTagName("field");
+      for (int i = 0; i < nodelist.getLength(); i++) {
+        Node node = nodelist.item(i);
+        NodeList childs = node.getChildNodes();
+        Field field = new Field(childs);
+        fields.add(field);
+      }
+      return fields;
+    } catch (Exception e) {
+      return new ArrayList<>();
     }
-    return -1;
   }
 
-  public static int photometricCode(String name) {
-    switch (name) {
-      case "Bilevel":
-        return 1;
-      case "RGB":
-        return 2;
-      case "Palette":
-        return 3;
-      case "Transparency Mask":
-        return 4;
-      case "CMYK":
-        return 5;
-      case "YCbCr":
-        return 6;
-      case "CIELAB":
-        return 10;
-    }
-    return -1;
+  public static Element getPolicyCheckerOptions(Document doc) {
+    // Policy checker
+    Element policyChecker = doc.createElement("policyCheckerOptions");
+    Element fields = doc.createElement("fields");
+    policyChecker.appendChild(fields);
+    // Image Width
+    Element field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "ImageWidth");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Image Width in pixels");
+    addElement(doc, field, "operators", ">,<,=");
+    // Image Height
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "ImageLength");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Image Height in pixels");
+    addElement(doc, field, "operators", ">,<,=");
+    // Pixel Density
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "PixelDensity");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Pixels per centimeter");
+    addElement(doc, field, "operators", ">,<,=");
+    // Number of images
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "NumberImages");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Number of images in the TIFF");
+    addElement(doc, field, "operators", ">,<,=");
+    // BitDepth
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "BitDepth");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Number of bits per pixel component");
+    addElement(doc, field, "operators", ">,<,=");
+    addElement(doc, field, "values", "1,2,4,8,16,32,64");
+    // DPI
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "DPI");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Dots per Inch");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", "Even,Uneven");
+    // Extra Channels
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "ExtraChannels");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Extra pixel components");
+    addElement(doc, field, "operators", ">,<,=");
+    // XY Resolution
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "EqualXYResolution");
+    addElement(doc, field, "type", "boolean");
+    addElement(doc, field, "description", "XResolution equal to YResolution");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", "False,True");
+    // BlankPage
+    //field = doc.createElement("field");
+    //fields.appendChild(field);
+    //addElement(doc, field, "name", "BlankPage");
+    //addElement(doc, field, "type", "boolean");
+    //addElement(doc, field, "description", "Page devoid of content (completely white)");
+    //addElement(doc, field, "operators", "=");
+    //addElement(doc, field, "values", "False,True");
+    // NumberBlankPage
+    //field = doc.createElement("field");
+    //fields.appendChild(field);
+    //addElement(doc, field, "name", "NumberBlankImages");
+    //addElement(doc, field, "type", "integer");
+    //addElement(doc, field, "description", "Number of Blank Pages");
+    //addElement(doc, field, "operators", ">,<,=");
+    // Compression
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "Compression");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "Compression scheme");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", PolicyConstants.compressionName(1) + "," + PolicyConstants.compressionName(2) + "," + PolicyConstants.compressionName(32773) + "," + PolicyConstants.compressionName(3) + "," + PolicyConstants.compressionName(4) + "," + PolicyConstants.compressionName(5) + "," + PolicyConstants.compressionName(6) + "," + PolicyConstants.compressionName(7) + "," + PolicyConstants.compressionName(8) + "," + PolicyConstants.compressionName(9) + "," + PolicyConstants.compressionName(10) + "");
+    // Photometric
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "Photometric");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "Color space of the image data");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", PolicyConstants.photometricName(1) + "," + PolicyConstants.photometricName(2) + "," + PolicyConstants.photometricName(3) + "," + PolicyConstants.photometricName(4) + "," + PolicyConstants.photometricName(5) + "," + PolicyConstants.photometricName(6) + "," + PolicyConstants.photometricName(10) + "");
+    // Planar
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "Planar");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "How the pixels components are stored");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", PolicyConstants.planarName(1) + "," + PolicyConstants.planarName(2));
+    // Byteorder
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "ByteOrder");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "Byte Order (BigEndian, LittleEndian)");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", ByteOrder.BIG_ENDIAN.toString() + "," + ByteOrder.LITTLE_ENDIAN.toString());
+    // FileSize
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "FileSize");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "The file size in bytes");
+    addElement(doc, field, "operators", ">,<,=");
+    // IccProfileClass
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "IccProfileClass");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "Class of the device ICC Profile");
+    addElement(doc, field, "operators", "=");
+    addElement(doc, field, "values", IccProfile.ProfileClass.Abstract + "," + IccProfile.ProfileClass.Input + "," + IccProfile.ProfileClass.Display + "," + IccProfile.ProfileClass.Output + "," + IccProfile.ProfileClass.DeviceLink + "," + IccProfile.ProfileClass.ColorSpace + "," + IccProfile.ProfileClass.NamedColor + "," + IccProfile.ProfileClass.Unknown);
+
+    return policyChecker;
   }
 
-  public static int planarCode(String name) {
-    switch (name) {
-      case "Chunky":
-        return 1;
-      case "Planar":
-        return 2;
-    }
-    return -1;
+  static void addElement(Document doc, Element conformenceCheckerElement, String name,
+                         String content) {
+    Element element = doc.createElement(name);
+    element.setTextContent(content);
+    conformenceCheckerElement.appendChild(element);
   }
 
 }
