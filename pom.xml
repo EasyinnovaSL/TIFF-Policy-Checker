@@ -6,12 +6,12 @@
 
     <groupId>com.easyinnova</groupId>
     <artifactId>tiffpolicychecker</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <packaging>jar</packaging>
-    <name>Tiff Implementation Checker</name>
+    <name>Tiff Policy Checker</name>
     <description>Policy Checker for TIFF</description>
-    <url>https://github.com/EasyinnovaSL/TIFF-Implementation-Checker/</url>
+    <url>https://github.com/EasyinnovaSL/TIFF-Policy-Checker/</url>
     <inceptionYear>2016</inceptionYear>
 
     <licenses>
@@ -68,17 +68,17 @@
                 </configuration>
             </plugin>
 
-            <!--<plugin>-->
-            <!--<groupId>org.sonatype.plugins</groupId>-->
-            <!--<artifactId>nexus-staging-maven-plugin</artifactId>-->
-            <!--<version>1.6.3</version>-->
-            <!--<extensions>true</extensions>-->
-            <!--<configuration>-->
-            <!--<serverId>ossrh</serverId>-->
-            <!--<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-            <!--<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -124,20 +124,20 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-gpg-plugin</artifactId>-->
-            <!--<version>1.5</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>sign-artifacts</id>-->
-            <!--<phase>verify</phase>-->
-            <!--<goals>-->
-            <!--<goal>sign</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
