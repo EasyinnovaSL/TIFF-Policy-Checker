@@ -6,7 +6,7 @@
 
     <groupId>com.easyinnova</groupId>
     <artifactId>tiffpolicychecker</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <packaging>jar</packaging>
     <name>Tiff Policy Checker</name>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.easyinnova</groupId>
             <artifactId>tiffimplementationchecker</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 
