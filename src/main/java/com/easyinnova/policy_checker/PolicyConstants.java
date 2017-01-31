@@ -1,7 +1,7 @@
 package com.easyinnova.policy_checker;
 
 /**
- * Created by Adrià Llorens on 27/12/2016.
+ * Created by Adria Llorens on 27/12/2016.
  */
 public class PolicyConstants {
   public static int compressionCode(String name) {

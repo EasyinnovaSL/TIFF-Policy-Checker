@@ -3,12 +3,13 @@ package com.easyinnova.policy_checker;
 import com.easyinnova.policy_checker.model.Field;
 import com.easyinnova.policy_checker.model.Rules;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Adrià Llorens on 27/12/2016.
+ * Created by Adria Llorens on 27/12/2016.
  */
 public class ArgumentParser {
 
@@ -53,7 +54,7 @@ public class ArgumentParser {
         }
       }
       // -l --list
-      else if (arg.equals("-h") || arg.equals("--help")) {
+      else if (arg.equals("-l") || arg.equals("--list")) {
         displayTagsList();
         error = true;
         return true;
@@ -64,10 +65,14 @@ public class ArgumentParser {
       }
       // Input path
       else {
-        if (path.isEmpty()) {
-          path = arg;
+        if (new File(arg).exists()) {
+          if (path.isEmpty()) {
+            path = arg;
+          } else {
+            printOutErr("Only one file path allowed.");
+          }
         } else {
-          printOutErr("Only one file path allowed.");
+          printOutErr("Invalid param: " + arg);
         }
       }
       idx++;

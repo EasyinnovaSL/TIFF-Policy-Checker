@@ -6,13 +6,18 @@
 
     <groupId>com.easyinnova</groupId>
     <artifactId>tiffpolicychecker</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <packaging>jar</packaging>
     <name>Tiff Policy Checker</name>
     <description>Policy Checker for TIFF</description>
     <url>https://github.com/EasyinnovaSL/TIFF-Policy-Checker/</url>
     <inceptionYear>2016</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
     <licenses>
         <license>
@@ -29,13 +34,13 @@
 
     <developers>
         <developer>
-            <name>Adrià Llorens Martinez</name>
+            <name>Adria Llorens Martinez</name>
             <email>adriallorens@easyinnova.com</email>
             <organization>Easy Innova</organization>
             <url>https://github.com/Adri7</url>
         </developer>
         <developer>
-            <name>Víctor Muñoz Solà</name>
+            <name>Víctor Muñoz Sola</name>
             <email>victormunoz@easyinnova.com</email>
             <organization>Easy Innova</organization>
             <organizationUrl>http://www.easyinnova.com</organizationUrl>
@@ -53,11 +58,26 @@
         <dependency>
             <groupId>com.easyinnova</groupId>
             <artifactId>tiffimplementationchecker</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.17</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -86,14 +106,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
                     <stylesheetfile>${basedir}/src/main/resources/stylesheet.css</stylesheetfile>
@@ -102,6 +114,7 @@
                         <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
                     </links>
                     <sourcepath>${basedir}/src</sourcepath>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
                 <executions>
                     <execution>
@@ -118,7 +131,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.easyinnova.Main</mainClass>
+                            <mainClass>com.easyinnova.policy_checker.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -150,7 +163,6 @@
             </activation>
             <build>
                 <plugins>
-
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -177,7 +189,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

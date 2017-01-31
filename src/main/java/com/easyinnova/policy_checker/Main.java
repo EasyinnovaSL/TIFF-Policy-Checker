@@ -1,4 +1,4 @@
-package com.easyinnova;
+package com.easyinnova.policy_checker;
 
 import com.easyinnova.implementation_checker.ImplementationCheckerValidator;
 import com.easyinnova.implementation_checker.ValidationResult;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Adrià Llorens on 27/12/2016.
+ * Created by Adria Llorens on 27/12/2016.
  */
 public class Main {
 
