@@ -83,9 +83,12 @@ public class PolicyChecker {
           ruleObj.setContext("tiffValidationObject");
           stringValue = true;
         }
-        if (tag.equals("DPI")) {
-          tag = "dpi";
+        if (tag.equals("Evenness")) {
+          tag = "evenness";
           stringValue = true;
+        }
+        if (tag.equals("LongEdge")) {
+          tag = "longEdge";
         }
         if (tag.equals("EqualXYResolution")) {
           tag = "equalXYResolution";
@@ -120,8 +123,9 @@ public class PolicyChecker {
           if (sTest.length() > 0) sTest += " || ";
           if (tag.equals("byteOrder")) sTest += "{" + tag + " " + operator + " ";
           else if (tag.equals("numberImages")) sTest += "{" + tag + " " + operator + " ";
-          else if (tag.equals("dpi")) sTest += "{" + tag + " " + operator + " ";
+          else if (tag.equals("evenness")) sTest += "{" + tag + " " + operator + " ";
           else if (tag.equals("equalXYResolution")) sTest += "{" + tag + " " + operator + " ";
+          else if (tag.equals("longEdge")) sTest += "{" + tag + " " + operator + " ";
           else sTest += "{tags.tag[name=" + tag + "] " + operator + " ";
           if (stringValue) sTest += "'";
           sTest += value;
@@ -181,28 +185,35 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "ImageWidth");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Image Width in pixels");
+    addElement(doc, field, "description", "Image Width (in pixels)");
     addElement(doc, field, "operators", ">,<,=");
     // Image Height
     field = doc.createElement("field");
     fields.appendChild(field);
     addElement(doc, field, "name", "ImageLength");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Image Height in pixels");
+    addElement(doc, field, "description", "Image Height (in pixels)");
+    addElement(doc, field, "operators", ">,<,=");
+    // Long Edge
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "LongEdge");
+    addElement(doc, field, "type", "integer");
+    addElement(doc, field, "description", "Longest edge of the image (either Width or Height)");
     addElement(doc, field, "operators", ">,<,=");
     // Pixel Density
     field = doc.createElement("field");
     fields.appendChild(field);
     addElement(doc, field, "name", "PixelDensity");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Pixels per centimeter");
+    addElement(doc, field, "description", "Resolution (Pixels per centimeter)");
     addElement(doc, field, "operators", ">,<,=");
     // Number of images
     field = doc.createElement("field");
     fields.appendChild(field);
     addElement(doc, field, "name", "NumberImages");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Number of images in the TIFF");
+    addElement(doc, field, "description", "Number of images in the file (multi-page TIFF)");
     addElement(doc, field, "operators", ">,<,=");
     // BitDepth
     field = doc.createElement("field");
@@ -212,12 +223,12 @@ public class PolicyChecker {
     addElement(doc, field, "description", "Number of bits per pixel component");
     addElement(doc, field, "operators", ">,<,=");
     addElement(doc, field, "values", "1,2,4,8,16,32,64");
-    // DPI
+    // Evenness
     field = doc.createElement("field");
     fields.appendChild(field);
-    addElement(doc, field, "name", "DPI");
+    addElement(doc, field, "name", "Evenness");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Dots per Inch");
+    addElement(doc, field, "description", "Check if resolution value is even or odd");
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", "Even,Uneven");
     // Extra Channels
@@ -225,14 +236,14 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "ExtraChannels");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Extra pixel components");
+    addElement(doc, field, "description", "Number of extra pixel components (other than primary color channels)");
     addElement(doc, field, "operators", ">,<,=");
     // XY Resolution
     field = doc.createElement("field");
     fields.appendChild(field);
     addElement(doc, field, "name", "EqualXYResolution");
     addElement(doc, field, "type", "boolean");
-    addElement(doc, field, "description", "XResolution equal to YResolution");
+    addElement(doc, field, "description", "Check X-Resolution to be equal to Y-Resolution");
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", "False,True");
     // BlankPage
@@ -271,7 +282,7 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "Planar");
     addElement(doc, field, "type", "string");
-    addElement(doc, field, "description", "How the pixels components are stored");
+    addElement(doc, field, "description", "How the pixels components are stored (Chunky=Pixel components stored contiguously, Planar=Separate component planes)");
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", PolicyConstants.planarName(1) + "," + PolicyConstants.planarName(2));
     // Byteorder
@@ -279,7 +290,7 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "ByteOrder");
     addElement(doc, field, "type", "string");
-    addElement(doc, field, "description", "Byte Order (BigEndian, LittleEndian)");
+    addElement(doc, field, "description", "Byte Order (Big Endian, Little Endian)");
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", ByteOrder.BIG_ENDIAN.toString() + "," + ByteOrder.LITTLE_ENDIAN.toString());
     // FileSize
