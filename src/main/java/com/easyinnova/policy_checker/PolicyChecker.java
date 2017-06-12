@@ -30,6 +30,7 @@ import com.easyinnova.implementation_checker.rules.model.RulesType;
 import com.easyinnova.policy_checker.model.Field;
 import com.easyinnova.policy_checker.model.Rule;
 import com.easyinnova.policy_checker.model.Rules;
+import com.easyinnova.tiff.model.TiffTags;
 import com.easyinnova.tiff.model.types.IccProfile;
 
 import org.w3c.dom.Document;
@@ -185,14 +186,14 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "ImageWidth");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Image Width (in pixels)");
+    addElement(doc, field, "description", TiffTags.getTag(TiffTags.getTagId("ImageWidth")).getDescription());
     addElement(doc, field, "operators", ">,<,=");
     // Image Height
     field = doc.createElement("field");
     fields.appendChild(field);
     addElement(doc, field, "name", "ImageLength");
     addElement(doc, field, "type", "integer");
-    addElement(doc, field, "description", "Image Height (in pixels)");
+    addElement(doc, field, "description", TiffTags.getTag(TiffTags.getTagId("ImageLength")).getDescription());
     addElement(doc, field, "operators", ">,<,=");
     // Long Edge
     field = doc.createElement("field");
@@ -266,7 +267,7 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "Compression");
     addElement(doc, field, "type", "string");
-    addElement(doc, field, "description", "Compression scheme");
+    addElement(doc, field, "description", TiffTags.getTag(TiffTags.getTagId("Compression")).getDescription());
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", PolicyConstants.compressionName(1) + "," + PolicyConstants.compressionName(2) + "," + PolicyConstants.compressionName(32773) + "," + PolicyConstants.compressionName(3) + "," + PolicyConstants.compressionName(4) + "," + PolicyConstants.compressionName(5) + "," + PolicyConstants.compressionName(6) + "," + PolicyConstants.compressionName(7) + "," + PolicyConstants.compressionName(8) + "," + PolicyConstants.compressionName(9) + "," + PolicyConstants.compressionName(10) + "");
     // Photometric
@@ -274,7 +275,7 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "Photometric");
     addElement(doc, field, "type", "string");
-    addElement(doc, field, "description", "Color space of the image data");
+    addElement(doc, field, "description", TiffTags.getTag(TiffTags.getTagId("PhotometricInterpretation")).getDescription());
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", PolicyConstants.photometricName(1) + "," + PolicyConstants.photometricName(2) + "," + PolicyConstants.photometricName(3) + "," + PolicyConstants.photometricName(4) + "," + PolicyConstants.photometricName(5) + "," + PolicyConstants.photometricName(6) + "," + PolicyConstants.photometricName(10) + "");
     // Planar
@@ -282,7 +283,7 @@ public class PolicyChecker {
     fields.appendChild(field);
     addElement(doc, field, "name", "Planar");
     addElement(doc, field, "type", "string");
-    addElement(doc, field, "description", "How the pixels components are stored (Chunky=Pixel components stored contiguously, Planar=Separate component planes)");
+    addElement(doc, field, "description", TiffTags.getTag(TiffTags.getTagId("PlanarConfiguration")).getDescription());
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", PolicyConstants.planarName(1) + "," + PolicyConstants.planarName(2));
     // Byteorder
