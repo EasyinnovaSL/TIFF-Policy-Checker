@@ -20,12 +20,13 @@
 package com.easyinnova.policy_checker.model;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by easy on 06/10/2015.
  */
-public class Rules {
+public class Rules implements Serializable {
   private ArrayList<Rule> rules;
 
   /**

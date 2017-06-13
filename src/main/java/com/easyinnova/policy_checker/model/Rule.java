@@ -19,10 +19,12 @@
 
 package com.easyinnova.policy_checker.model;
 
+import java.io.Serializable;
+
 /**
  * Created by easy on 06/10/2015.
  */
-public class Rule {
+public class Rule implements Serializable {
   private String tag;
   private String operator;
   private String value;
