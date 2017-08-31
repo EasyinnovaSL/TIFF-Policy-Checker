@@ -99,6 +99,9 @@ public class PolicyChecker {
           ruleObj.setContext("tiffValidationObject");
           tag = "numberImages";
         }
+        if (tag.equals("IccProfileClass") || tag.equals("IccProfileName")) {
+          stringValue = true;
+        }
         AssertType assertObj = new AssertType();
         String operator = rule.getOperator();
         if (operator.equals("=")) operator = "==";
@@ -127,6 +130,8 @@ public class PolicyChecker {
           else if (tag.equals("evenness")) sTest += "{" + tag + " " + operator + " ";
           else if (tag.equals("equalXYResolution")) sTest += "{" + tag + " " + operator + " ";
           else if (tag.equals("longEdge")) sTest += "{" + tag + " " + operator + " ";
+          else if (tag.equals("IccProfileClass")) sTest += "{tags.tag[name=ICCProfile].class " + operator + " ";
+          else if (tag.equals("IccProfileName")) sTest += "{tags.tag[name=ICCProfile].description " + operator + " ";
           else sTest += "{tags.tag[name=" + tag + "] " + operator + " ";
           if (stringValue) sTest += "'";
           sTest += value;
@@ -309,6 +314,13 @@ public class PolicyChecker {
     addElement(doc, field, "description", "Class of the device ICC Profile");
     addElement(doc, field, "operators", "=");
     addElement(doc, field, "values", IccProfile.ProfileClass.Abstract + "," + IccProfile.ProfileClass.Input + "," + IccProfile.ProfileClass.Display + "," + IccProfile.ProfileClass.Output + "," + IccProfile.ProfileClass.DeviceLink + "," + IccProfile.ProfileClass.ColorSpace + "," + IccProfile.ProfileClass.NamedColor + "," + IccProfile.ProfileClass.Unknown);
+    // IccProfileName
+    field = doc.createElement("field");
+    fields.appendChild(field);
+    addElement(doc, field, "name", "IccProfileName");
+    addElement(doc, field, "type", "string");
+    addElement(doc, field, "description", "Name of the ICC Profile");
+    addElement(doc, field, "operators", "=");
 
     return policyChecker;
   }
